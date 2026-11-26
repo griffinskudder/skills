@@ -1,0 +1,7 @@
+{
+  "name": "software-architecture",
+  "description": "Skills for modular monoliths, ports and adapters, architecture reviews, and service extraction",
+  "author": {
+    "name": "Griffin Skudder"
+  }
+}

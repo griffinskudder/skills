@@ -6,6 +6,16 @@ Browse or clone the [griffinskudder/skills repository on GitHub](https://github.
 
 ## Skill groups
 
+### Software Architecture
+
+Start with [Design a Modular Monolith](groups/software-architecture/skills/design-modular-monolith/SKILL.md) to choose a deployment model and define business module boundaries. The default is one deployable with clear module APIs and data ownership, using ports and adapters where they help isolate business behavior.
+
+- [Apply Hexagonal Architecture](groups/software-architecture/skills/apply-hexagonal-architecture/SKILL.md) introduces ports and adapters around a use case and verifies the real entry point.
+- [Review Architecture Boundaries](groups/software-architecture/skills/review-architecture-boundaries/SKILL.md) traces code and runtime coupling, data ownership, and dependency direction.
+- [Evaluate Service Extraction](groups/software-architecture/skills/evaluate-service-extraction/SKILL.md) tests the case for independent deployment and plans an incremental migration when warranted.
+
+The [research findings](groups/software-architecture/skills/design-modular-monolith/references/research.md) explain the rationale, trade-offs, and limits of the evidence.
+
 ### Software Delivery
 
 Start with [Autonomous Software Delivery](groups/software-delivery/skills/autonomous-software-delivery/SKILL.md) to carry a change to a specified endpoint, such as a verified patch, a pull request with passing CI, or a verified rollout. Use any of the phase skills directly when you need a narrower workflow.
@@ -50,6 +60,7 @@ Run the script with Python 3.8 or later from the project where you want to use t
 ```sh
 python /path/to/skills/install.py --list
 python /path/to/skills/install.py --list-groups
+python /path/to/skills/install.py --group software-architecture
 python /path/to/skills/install.py --group software-delivery
 python /path/to/skills/install.py --group django --list
 python /path/to/skills/install.py --group django
@@ -71,6 +82,7 @@ The Claude Code marketplace offers one plugin per group. To use a local checkout
 
 ```sh
 claude plugin marketplace add griffinskudder/skills
+claude plugin install software-architecture@griffinskudder-skills
 claude plugin install software-delivery@griffinskudder-skills
 claude plugin install django@griffinskudder-skills
 ```

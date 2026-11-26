@@ -6,6 +6,11 @@
   },
   "plugins": [
     {
+      "name": "software-architecture",
+      "source": "./groups/software-architecture",
+      "description": "Skills for modular monoliths, ports and adapters, architecture reviews, and service extraction"
+    },
+    {
       "name": "software-delivery",
       "source": "./groups/software-delivery",
       "description": "Skills for mostly autonomous software delivery"

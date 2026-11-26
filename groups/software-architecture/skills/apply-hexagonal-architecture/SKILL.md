@@ -1,0 +1,15 @@
+---
+name: apply-hexagonal-architecture
+description: Design or refactor an application use case with ports and adapters. Use when business behavior needs to be exercised independently of HTTP, storage, messaging, or third-party APIs.
+---
+
+# Apply hexagonal architecture
+
+Trace one use case through its real entry point, business decisions, and side effects. Find where transport, persistence, or vendor code makes the behavior difficult to exercise or change. Start with the smallest boundary that addresses that friction. Simple CRUD can use the framework directly when it offers a clear implementation and practical tests.
+
+1. Put business decisions and workflow coordination behind a callable application operation. A driving adapter such as an HTTP handler, CLI command, or job translates input and output. Keep transport details in that adapter. A function or concrete application service can serve as the driving port.
+2. When a use case needs an external capability, express that need as a driven port in application terms. Keep framework types and vendor responses out of the contract when they would couple the use case to the adapter. Define failure and atomicity semantics where the caller relies on them. Implement the contract in the adapter and assemble the dependencies at the application entry point or existing composition root. Runtime calls can go outward through the port while source dependencies point toward the contract.
+3. Keep abstractions proportional to the behavior. Group related operations around a purpose. Use an existing module API as a boundary when it already supplies the needed behavior. Add dedicated interfaces, mapping, or fakes where they protect a real seam or enable a meaningful test.
+4. Verify business rules through the application operation, using a test adapter when it helps exercise outcomes. Check real adapters for assumptions the fake cannot prove, such as database constraints, rollback, or third-party response mapping. Exercise the normal entry point to verify the wiring and preserve existing error behavior during refactors.
+
+For a design request, show the call path, which side defines each contract, and how the behavior can be verified. For an implementation request, keep the change focused on the use case and report which checks ran.
