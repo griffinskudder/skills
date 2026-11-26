@@ -6,6 +6,17 @@ Browse or clone the [griffinskudder/skills repository on GitHub](https://github.
 
 ## Skill groups
 
+### Software Delivery
+
+Start with [Autonomous Software Delivery](groups/software-delivery/skills/autonomous-software-delivery/SKILL.md) to carry a change to a specified endpoint, such as a verified patch, a pull request with passing CI, or a verified rollout. Use any of the phase skills directly when you need a narrower workflow.
+
+- [Plan a Delivery Change](groups/software-delivery/skills/plan-delivery-change/SKILL.md) turns a request into observable acceptance criteria and independently verifiable slices.
+- [Implement a Delivery Slice](groups/software-delivery/skills/implement-delivery-slice/SKILL.md) builds one slice with fast feedback and leaves evidence the next session can use.
+- [Verify a Delivery Change](groups/software-delivery/skills/verify-delivery-change/SKILL.md) checks the actual behavior, relevant regressions, and CI for the candidate revision.
+- [Release a Delivery Change](groups/software-delivery/skills/release-delivery-change/SKILL.md) drives an authorized rollout through health checks and recovery when needed.
+
+The workflow uses repository-local context, short feedback loops, and checkpoints for work that spans sessions. It treats independent evaluation as an option for difficult changes and measures progress at the requested delivery endpoint. The design draws on [OpenAI's harness engineering case study](https://openai.com/index/harness-engineering/), [Anthropic's long-running harness experiments](https://www.anthropic.com/research/harness-design-long-running-apps), [DORA's research on small batches](https://dora.dev/capabilities/working-in-small-batches/), and the working paper [Writing Code vs. Shipping Code](https://doi.org/10.3386/w35275).
+
 ### Django
 
 - [Diagnose Django performance](groups/django/skills/diagnose-django-performance/SKILL.md) covers query growth, template rendering costs, and response size in slow Django requests.
@@ -36,6 +47,7 @@ Run the script with Python 3.8 or later from the project where you want to use t
 ```sh
 python /path/to/skills/install.py --list
 python /path/to/skills/install.py --list-groups
+python /path/to/skills/install.py --group software-delivery
 python /path/to/skills/install.py --group django --list
 python /path/to/skills/install.py --group django
 python /path/to/skills/install.py diagnose-django-performance
@@ -56,6 +68,7 @@ The Claude Code marketplace offers one plugin per group. To use a local checkout
 
 ```sh
 claude plugin marketplace add griffinskudder/skills
+claude plugin install software-delivery@griffinskudder-skills
 claude plugin install django@griffinskudder-skills
 ```
 

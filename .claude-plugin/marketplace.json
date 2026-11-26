@@ -6,6 +6,11 @@
   },
   "plugins": [
     {
+      "name": "software-delivery",
+      "source": "./groups/software-delivery",
+      "description": "Skills for mostly autonomous software delivery"
+    },
+    {
       "name": "django",
       "source": "./groups/django",
       "description": "Skills for working on Django projects"
