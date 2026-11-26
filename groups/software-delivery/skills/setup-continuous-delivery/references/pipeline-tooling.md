@@ -1,0 +1,14 @@
+# Pipeline tooling
+
+Choose the code host's native CI and the deployment target's native release tools as a starting point when they support the project. Confirm availability, permissions, and plan requirements in the target environment.
+
+| Need | Options and decision criteria |
+| --- | --- |
+| Pull request checks | GitHub Actions and GitLab CI/CD both support repository-defined pipelines. Use [actionlint](https://github.com/rhysd/actionlint) or [GitLab CI Lint](https://docs.gitlab.com/ci/yaml/lint/) for early feedback, then verify the actual host trigger and required check. |
+| Concurrent merges | Add [GitHub merge queue](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue) or [GitLab merge trains](https://docs.gitlab.com/ci/pipelines/merge_trains/) when testing only the individual changes misses interactions at merge time. In GitHub Actions, required checks must also run on `merge_group` for the queue. |
+| Privileged jobs | Use the host's documented controls for workflow dependencies, job permissions, and protected environments. For cloud access, use short-lived identity scoped to the trusted job. [GitHub secure use](https://docs.github.com/en/actions/reference/security/secure-use) · [GitHub OIDC](https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-cloud-providers) · [GitLab protected environments](https://docs.gitlab.com/ci/environments/protected_environments/) · [GitLab cloud identity](https://docs.gitlab.com/ci/cloud_services/) |
+| Release provenance | Store artifacts in the existing registry or package repository. Where provenance is required, generate attestations and verify the artifact against an expected source and builder before promotion. [GitHub artifact attestations](https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations) · [SLSA verification](https://slsa.dev/spec/v1.2/verifying-artifacts) |
+| Staged rollout | Use the runtime platform's existing rollout mechanism. For teams already operating Kubernetes and needing automated canary analysis, [Argo Rollouts](https://argo-rollouts.readthedocs.io/en/stable/features/analysis/) is an option. Choose a health signal that can actually detect degradation during the rollout window. |
+| Runtime evidence | Use existing logs, metrics, and traces. Consider an [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/) when telemetry needs vendor-neutral processing and routing across services. |
+
+Track whether the pipeline shortens change lead time and improves recovery or reduces failures. Start with small batches, reliable test automation, and a repeatable deploy process. [DORA continuous delivery](https://dora.dev/capabilities/continuous-delivery/) · [DORA small batches](https://dora.dev/capabilities/working-in-small-batches/)

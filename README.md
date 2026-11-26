@@ -10,10 +10,13 @@ Browse or clone the [griffinskudder/skills repository on GitHub](https://github.
 
 Start with [Autonomous Software Delivery](groups/software-delivery/skills/autonomous-software-delivery/SKILL.md) to carry a change to a specified endpoint, such as a verified patch, a pull request with passing CI, or a verified rollout. Use any of the phase skills directly when you need a narrower workflow.
 
+- [Triage a Delivery Request](groups/software-delivery/skills/triage-delivery-request/SKILL.md) decides whether a request is ready for autonomous execution and returns underspecified work with the question that would unblock it.
 - [Plan a Delivery Change](groups/software-delivery/skills/plan-delivery-change/SKILL.md) turns a request into observable acceptance criteria and independently verifiable slices.
 - [Implement a Delivery Slice](groups/software-delivery/skills/implement-delivery-slice/SKILL.md) builds one slice with fast feedback and leaves evidence the next session can use.
 - [Verify a Delivery Change](groups/software-delivery/skills/verify-delivery-change/SKILL.md) checks the actual behavior, relevant regressions, and CI for the candidate revision.
 - [Release a Delivery Change](groups/software-delivery/skills/release-delivery-change/SKILL.md) drives an authorized rollout through health checks and recovery when needed.
+
+Use [Set Up a Delivery Repository](groups/software-delivery/skills/setup-delivery-repository/SKILL.md) to make the project easy to bootstrap, navigate, and verify. Use [Set Up Continuous Delivery](groups/software-delivery/skills/setup-continuous-delivery/SKILL.md) to establish merge checks, artifact promotion, and release verification. Both include tooling options and selection criteria.
 
 The workflow uses repository-local context, short feedback loops, and checkpoints for work that spans sessions. It treats independent evaluation as an option for difficult changes and measures progress at the requested delivery endpoint. The design draws on [OpenAI's harness engineering case study](https://openai.com/index/harness-engineering/), [Anthropic's long-running harness experiments](https://www.anthropic.com/research/harness-design-long-running-apps), [DORA's research on small batches](https://dora.dev/capabilities/working-in-small-batches/), and the working paper [Writing Code vs. Shipping Code](https://doi.org/10.3386/w35275).
 
