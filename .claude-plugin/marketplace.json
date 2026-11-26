@@ -1,0 +1,14 @@
+{
+  "name": "griffinskudder-skills",
+  "description": "Reusable Agent Skills by Griffin Skudder",
+  "owner": {
+    "name": "Griffin Skudder"
+  },
+  "plugins": [
+    {
+      "name": "django",
+      "source": "./groups/django",
+      "description": "Skills for working on Django projects"
+    }
+  ]
+}
