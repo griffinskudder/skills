@@ -1,6 +1,6 @@
 ---
 name: autonomous-software-delivery
-description: Drive a software change autonomously from a request or backlog item through the requested delivery endpoint. Use for end-to-end implementation, pull request and CI follow-through, or resuming a delivery run.
+description: Drive a software change autonomously from a request or plan through the requested delivery endpoint. Use for end-to-end implementation, subagent-driven delivery, pull request and CI follow-through, or resuming a delivery run.
 ---
 
 # Autonomous Software Delivery
@@ -14,6 +14,8 @@ Read the request, repository guidance, current work, and the checks that govern 
 Turn the outcome into acceptance checks and choose the smallest slice that can be verified through a real entry point. Resolve routine decisions from existing behavior and conventions. When the evidence leaves a material choice about the intended outcome or scope, return the underspecified work with the question that would make it actionable before editing for that outcome. Use the `triage-delivery-request` skill if available. When a later step depends on external permission or a risk decision, continue independent work within the established scope and ask for the decision at the blocked step.
 
 ## Run the delivery loop
+
+When the user requests subagent-driven delivery and the host permits spawning subagents, use the [delegated slice loop](references/delegated-delivery.md) in place of steps 1 and 2. If delegation is unavailable, explain the limitation and run the slice loop directly. Keep any explicitly required independent review open until it can be performed.
 
 1. Establish the relevant baseline and implement the active slice. Run the cheapest meaningful behavior check early and inspect failures before retrying.
 2. Verify the slice against the original acceptance checks. Use the actual application, API, or CLI when that is where the behavior lives. For a material risk that ordinary checks do not cover, use a fresh verification pass against the task and candidate, or an independent evaluator when available and authorized.

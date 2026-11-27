@@ -20,6 +20,8 @@ The [research findings](groups/software-architecture/skills/design-modular-monol
 
 Start with [Autonomous Software Delivery](groups/software-delivery/skills/autonomous-software-delivery/SKILL.md) to carry a change to a specified endpoint, such as a verified patch, a pull request with passing CI, or a verified rollout. Use any of the phase skills directly when you need a narrower workflow.
 
+For a multi-slice plan, ask to use subagent-driven delivery. When the host supports delegation, the workflow assigns each slice to a fresh implementer, reviews it independently, and checks the integrated change before proceeding to the requested endpoint.
+
 - [Triage a Delivery Request](groups/software-delivery/skills/triage-delivery-request/SKILL.md) decides whether a request is ready for autonomous execution and returns underspecified work with the question that would unblock it.
 - [Plan a Delivery Change](groups/software-delivery/skills/plan-delivery-change/SKILL.md) turns a request into observable acceptance criteria and independently verifiable slices.
 - [Implement a Delivery Slice](groups/software-delivery/skills/implement-delivery-slice/SKILL.md) builds one slice with fast feedback and leaves evidence the next session can use.
