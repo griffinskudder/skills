@@ -1,6 +1,6 @@
 ---
 name: design-modular-monolith
-description: Choose the architecture for a new application or design business module boundaries in an existing monolith. Use for modular monolith design, module APIs, and decisions about data ownership and transactions.
+description: Design business module boundaries for an application considering or using a modular monolith. Use when defining module APIs, data ownership, and transaction boundaries within a deployable application.
 ---
 
 # Design a modular monolith

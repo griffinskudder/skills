@@ -1,6 +1,6 @@
 ---
 name: plan-delivery-change
-description: Turn a software request into observable acceptance criteria and small delivery slices. Use when scoping an ambiguous change or planning work that spans multiple pull requests, interfaces, or sessions.
+description: Plan a requested software change by defining acceptance criteria, sequencing dependencies, and identifying the first verifiable slice. Use when the requested deliverable is a plan or migration sequence.
 ---
 
 # Plan a Delivery Change

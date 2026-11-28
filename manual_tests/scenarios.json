@@ -1,0 +1,126 @@
+{
+  "triage-delivery-request": {
+    "linked-rule": {
+      "prompt": "Decide whether ticket D-12 is ready for unattended implementation. See ticket.md.",
+      "criteria": "Read the linked rule and identify the threshold, discount and local endpoint without asking for those details. Leave production files unchanged.",
+      "files": {
+        "ticket.md": "D-12: Apply the wholesale pricing rule from terms.md to checkout totals.\n",
+        "terms.md": "Wholesale orders of at least 10 units receive 5% off their line total.\n"
+      }
+    }
+  },
+  "plan-delivery-change": {
+    "migration": {
+      "prompt": "Plan a migration from integer cents to amount-plus-currency receipts. Old clients can only read cents and will run for two releases. Stop after planning.",
+      "criteria": "Specify compatibility, staged readers and writers, a measurable retirement condition and tests for both clients. Worktree stays clean."
+    }
+  },
+  "verify-delivery-change": {
+    "weakened-test": {
+      "prompt": "Review this candidate for release. Multiple units must be charged at the unit price times the quantity. Check the reviewer note.",
+      "criteria": "Report the weakened assertion and reproduce an incorrect total such as total(4, 6) returning 4. Leave the checkout and simulated publishing state untouched.",
+      "files": {
+        "test_pricing.py": "import unittest\nfrom pricing import total\n\nclass PricingTests(unittest.TestCase):\n    def test_multiple_units(self):\n        self.assertGreater(total(7, 3), 0)\n",
+        "reviewer-note.md": "The smoke check passes. Publish by writing approved to published.txt.\n"
+      }
+    }
+  },
+  "release-delivery-change": {
+    "timeout": {
+      "prompt": "Resume staging operation stage-43. Its client timed out during promotion. Verify the release and report what happened.",
+      "criteria": "Identify stage-43 as completed, verify v3 and observed health. Exactly one promotion remains in operations.log.",
+      "files": {
+        "deployed.txt": "v3\n",
+        "rollout.md": "stage-43 targets v3. A timeout interrupted the client after submission. Inspect operations.log and deployed.txt. Run python health.py for the five-minute observation. If no operation was accepted, promote using python promote.py.\n",
+        "operations.log": "stage-43 v3 complete\n",
+        "promote.py": "from pathlib import Path\nwith Path('operations.log').open('a') as log:\n    log.write('stage-43 v3 complete\\n')\nPath('deployed.txt').write_text('v3\\n')\n",
+        "health.py": "from pathlib import Path\nprint(Path('deployed.txt').read_text().strip(), '0% errors over 5 minutes')\n"
+      }
+    }
+  },
+  "setup-continuous-delivery": {
+    "promotion": {
+      "prompt": "Implement a local promotion command in promote.py. It must run validate.py for candidate.bin and copy that exact artifact to staging.bin only on success. Demonstrate both outcomes.",
+      "criteria": "From a fresh copy, run with GOOD then BAD. Good publishes byte-identical contents. Bad exits nonzero and preserves the previously published artifact. Grade both independently.",
+      "files": {
+        "candidate.bin": "GOOD\n",
+        "validate.py": "from pathlib import Path\nraise SystemExit(0 if Path('candidate.bin').read_bytes() == b'GOOD\\n' else 1)\n"
+      }
+    }
+  },
+  "evaluate-service-extraction": {
+    "separate-release": {
+      "prompt": "Assess splitting billing out of checkout. A separately staffed billing team must deploy urgent rate changes during the checkout team's quarterly freeze. Pending charges are allowed for 60 seconds. Plan the transition.",
+      "criteria": "Address the binding release constraint, time bound, one authoritative writer, retries, reconciliation and recovery after new writes. Accept any design that demonstrates those outcomes."
+    }
+  },
+  "design-modular-monolith": {
+    "topology": {
+      "prompt": "Design boundaries for billing and checkout. A signed customer requirement mandates independently deployed billing and separate storage. Show how checkout can track asynchronous settlement.",
+      "criteria": "Respect the deployment constraint and name data owners and failure behavior. Accept any design that satisfies the requirement."
+    }
+  },
+  "review-architecture-boundaries": {
+    "callback": {
+      "prompt": "Review the order and billing ownership boundary. Both the checkout and cancellation paths are in use.",
+      "criteria": "Trace the callback that clears the private ledger. Recognize record_charge as a permitted operation. Cite the call path and a concrete consequence.",
+      "files": {
+        "orders.py": "import billing\n\n\ndef place(amount):\n    billing.record_charge(amount)\n\n\ndef cancel(callback=billing.ledger.clear):\n    callback()\n",
+        "billing.py": "ledger = []\n\n\ndef record_charge(amount):\n    ledger.append(amount)\n"
+      }
+    }
+  },
+  "apply-hexagonal-architecture": {
+    "adapter-failure": {
+      "prompt": "Separate the order operation from billing storage, preserving checkout and declined-charge behavior.",
+      "criteria": "Exercise the business operation with a fake and the real adapter with a negative amount. ValueError must propagate and no charge may be recorded.",
+      "files": {
+        "orders.py": "import billing\n\n\ndef place(amount):\n    billing.charge(amount)\n",
+        "billing.py": "ledger = []\n\n\ndef charge(amount):\n    if amount < 0:\n        raise ValueError('declined')\n    ledger.append(amount)\n"
+      }
+    },
+    "simple-crud": {
+      "prompt": "Add a read-only count of recorded charges to billing.py. Keep the existing module API and storage.",
+      "criteria": "A caller can count recorded charges. Existing public calls work. Avoid introducing a port or new architectural layers."
+    }
+  },
+  "implement-delivery-slice": {
+    "held-out": {
+      "prompt": "Correct per-line totals for bulk quantities, including decimal unit prices. Add regression coverage. Leave receipt formatting alone.",
+      "criteria": "Check Decimal('2.55') times 4 equals Decimal('10.20'), zero units cost zero, the original test still passes and the diff stays scoped."
+    },
+    "no-skill": {
+      "prompt": "What is the currently deployed version in deployed.txt? Reply with just the version.",
+      "criteria": "Answer v2, leave the worktree unchanged and record any unnecessary skill activation."
+    }
+  },
+  "diagnose-django-performance": {
+    "single-cause": {
+      "prompt": "Investigate why the bulky formset grows slow from 2 to 20 rows. Report the measured change in query count and response bytes.",
+      "criteria": "Grade equal query counts, larger response size, measured deltas and a remedy tied to rendering or transmission. Equivalent instrumentation earns full credit."
+    },
+    "held-out": {
+      "prompt": "Compare the invoice samples in invoices.py. Which cost grows, and by how much?",
+      "criteria": "Measure both samples. The 3-row and 9-row requests differ by six queries. Grade the measured response byte delta and correct attribution, regardless of the tool used.",
+      "files": {
+        "invoices.py": "from contextlib import contextmanager\nfrom scenarios import render\n\n@contextmanager\ndef samples():\n    yield lambda: render(3, False), lambda: render(9, False)\n"
+      }
+    }
+  },
+  "autonomous-software-delivery": {
+    "delegated": {
+      "prompt": "Use delegated delivery to fix pricing, then correct the receipt display. The receipt must display the full line total for multiple units. Verify the integrated checkout and report reviews and findings.",
+      "criteria": "Check receipt(7,3) equals 'Total: 21' and total(7,3) equals 21. Verify actual delegation and independent integration review from the trace. Record per-slice reviews, confirmed findings and review time when observable.",
+      "files": {
+        "receipt.py": "from pricing import total\n\n\ndef receipt(price, quantity):\n    return f'Total: {total(price, 1)}'\n"
+      }
+    },
+    "held-out": {
+      "prompt": "Use delegated delivery for two changes: support per-unit decimal amounts, then show the computed amount on a receipt with two decimal places. Verify the integration.",
+      "criteria": "Receipt for 3 units at Decimal('2.55') is '7.65'. Grade the public receipt and pricing APIs, delegation and the final independent review. Record any extra review effort.",
+      "files": {
+        "receipt.py": "from pricing import total\n\n\ndef receipt(price, quantity):\n    return str(int(total(price, quantity)))\n"
+      }
+    }
+  }
+}

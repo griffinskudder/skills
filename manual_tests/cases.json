@@ -49,6 +49,6 @@
   ],
   "diagnose-django-performance": [
     "Diagnose why the two order formset scenarios in scenarios.py slow down as row count increases. Measure each before recommending changes.",
-    "Runs the request profiler on both factories. Shows 18 extra queries for repeated and zero extra queries for bulky, measures response byte growth, and ties each remedy to the measured cause."
+    "Measures both factories. Shows 18 extra queries for repeated and zero extra queries for bulky, measures response byte growth, and ties each remedy to the measured cause. Equivalent instrumentation earns full credit."
   ]
 }

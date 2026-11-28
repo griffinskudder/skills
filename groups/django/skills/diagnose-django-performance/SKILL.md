@@ -11,7 +11,7 @@ description: Diagnose slow Django requests, especially formsets and pages whose 
 - Vary one dimension at a time. Compare a small record with a larger record against the same catalogue, then vary catalogue size with the record held fixed. Use `CaptureQueriesContext` to count SQL on the relevant tables or group it by query shape. Keep bind values and record contents out of shared output.
 - Measure response bytes and relevant render or browser timings when the page is still slow with stable query counts. A collapsed section can still render and send every control. If Python work dominates, time the suspected function separately on the same inputs before and after the change.
 
-Use [compare_request_profiles.py](scripts/compare_request_profiles.py) for a repeatable comparison. Run it from the Django project root in the project's Python environment with test settings and an isolated database.
+Use [compare_request_profiles.py](scripts/compare_request_profiles.py) for a repeatable comparison. Run it from the Django project root with Python 3.10+, Django installed, test settings and an isolated database. The helper measures synchronous requests that return a successful (2xx), non-streaming response.
 
 ```sh
 python path/to/compare_request_profiles.py --settings project.test_settings --scenarios request_fixtures:scenarios --max-query-growth 0

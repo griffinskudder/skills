@@ -20,7 +20,7 @@ The [research findings](groups/software-architecture/skills/design-modular-monol
 
 Start with [Autonomous Software Delivery](groups/software-delivery/skills/autonomous-software-delivery/SKILL.md) to carry a change to a specified endpoint, such as a verified patch, a pull request with passing CI, or a verified rollout. Use any of the phase skills directly when you need a narrower workflow.
 
-For a multi-slice plan, ask to use subagent-driven delivery. When the host supports delegation, the workflow assigns each slice to a fresh implementer, reviews it independently, and checks the integrated change before proceeding to the requested endpoint.
+For a multi-slice plan, ask to use subagent-driven delivery. When the host supports delegation, the workflow assigns each slice to a fresh implementer, reviews individual slices when required or when risk warrants it, and independently checks the integrated change before proceeding to the requested endpoint.
 
 - [Triage a Delivery Request](groups/software-delivery/skills/triage-delivery-request/SKILL.md) decides whether a request is ready for autonomous execution and returns underspecified work with the question that would unblock it.
 - [Plan a Delivery Change](groups/software-delivery/skills/plan-delivery-change/SKILL.md) turns a request into observable acceptance criteria and independently verifiable slices.
@@ -109,6 +109,40 @@ The `codex` command requires a signed-in Codex CLI supporting `exec --ephemeral 
 `check` verifies case coverage, skill metadata, local links, group listings and byte-for-byte installs. For a trial, open the printed temporary repository in a fresh agent session that discovers project skills from `.agents/skills`. Paste only the printed prompt. Each run creates an independent checkout with all skills installed and leaves it available for inspection.
 
 Use `routing` to see which skill the agent opens for a natural request. Record the actual activation from the session trace. Mark it unverified if the host doesn’t expose activation. Prompts for neighboring skills serve as negative examples: for instance, the plan-only request should end with a plan. Use `outcome` to name the skill explicitly and compare the final checkout, commands and answer with the printed evaluator criteria. Record the skill, mode, model, pass/fail and supporting evidence. Repeat both modes for each name from `list` for a full manual run. Delete a trial directory after reviewing it.
+
+### Compare skill outcomes
+
+Use the paired runner to measure whether a skill improves a particular task in Claude Code or Codex. Each host gets fresh Git repositories, the same prompt and fixture revision for each condition, and a fixed model. Interactive reviewers can prepare the extended fixtures with `prepare SKILL outcome --scenario NAME`. [Scenario names and grading criteria](manual_tests/scenarios.json)
+
+```sh
+python manual_tests/compare.py compare diagnose-django-performance --arms none only --model claude-sonnet-5
+python manual_tests/compare.py compare diagnose-django-performance --arms none only --host codex --model gpt-6.2-sol
+python manual_tests/compare.py compare implement-delivery-slice --scenario held-out --arms none only coordinator --model claude-sonnet-5
+python manual_tests/compare.py compare autonomous-software-delivery --scenario delegated --arms only candidate --candidate-dir /path/to/alternate/autonomous-software-delivery --model claude-sonnet-5
+python manual_tests/compare.py compare autonomous-software-delivery --scenario delegated --arms only candidate --candidate-dir /path/to/alternate/autonomous-software-delivery --host codex --retain-codex-session --model gpt-6.2-sol
+python manual_tests/compare.py compare implement-delivery-slice --scenario no-skill --arms all without --repeat 3 --model claude-sonnet-5
+python manual_tests/compare.py summarize /path/to/skill-comparison-results
+```
+
+Use a model available to the selected provider account. Live runs require a signed-in CLI and the fixture dependencies. Claude uses project setting sources and JSONL output. Codex requires `debug prompt-input` and `exec --ephemeral --json`. Use `--executable` if the CLI is outside PATH. Each arm starts one provider session per repeat. Delegated prompts can start additional sessions. Use `--prepare-only` to inspect the fixture, skill selection and evaluator rubric locally. A repeat rotates the starting arm. For the delegated review comparison, supply the complete alternate skill directory, including its review reference, from the revision you want to compare.
+
+The `all` and `without` arms measure the target's contribution alongside neighboring skills. The `none`, `only`, `coordinator` and `candidate` arms expose zero repository skills, the target, the coordinator alone, or an alternate target revision. Claude reports discovered skills and plugins at startup. Codex disables plugins, apps, and personal skill copies for the session and inspects the model-visible skill catalog before sending the task. Both adapters record the other available skill names and exclude mismatched pairs from the summary. A natural prompt lets each agent choose its procedure. Record actual activation from the trace. Opening the checkout’s skill file or an observed Skill call counts as evidence.
+
+Grade each anonymous trial directory before consulting its arm in `manifest.json`. Use `task.json` for the fixture location and rubric, then inspect the final checkout, answer and trace. Use independent inputs from the rubric for behavior checks. Fill in `grade.json` with endpoint `pass` or `fail`, supporting evidence, activation or `unknown`, confirmed review findings and review time when observable. Compare elapsed time, model usage and available cost in the manifest. The summary reports each later arm’s endpoint wins, ties and losses relative to the first arm. Incomplete, ungraded and mismatched trials are counted as unverified. Repeat promising differences on held-out tasks before merging a skill or publishing an evaluation workflow for other repositories.
+
+For a delegated Codex trial, `--retain-codex-session` keeps the synthetic session in the local Codex history. With CLI 0.172.0 an ephemeral session could fail to supply parent context to a subagent. Check stderr for spawn errors and confirm reviewer dispatch and returned findings in the trial's own transcript. A coordinator's claim of independent review is insufficient evidence. For headless Claude runs, record any command awaiting permission and distinguish an agent-verified result from an evaluator's later replay.
+
+### Run a trial in Docker Sandboxes
+
+Use a local `sbx` installation with Docker sign-in, the provider's sandbox credential binding, and a default-deny network policy. The runner creates a mountless sandbox with shared skills disabled, copies in a synthetic Git checkout, and gives the agent unattended execution inside that sandbox. For Django trials, use a host Python environment with Django, asgiref and sqlparse installed. The runner copies those packages into the guest. [Docker Sandboxes](https://docs.docker.com/ai/sandboxes/)
+
+```sh
+python manual_tests/sandbox_trial.py claude diagnose-django-performance none --model claude-sonnet-5 --results /path/to/results/claude-django-none
+python manual_tests/sandbox_trial.py claude diagnose-django-performance only --model claude-sonnet-5 --results /path/to/results/claude-django-only
+python manual_tests/sandbox_trial.py codex implement-delivery-slice only --scenario held-out --model gpt-6.2-sol --results /path/to/results/codex-slice
+```
+
+Select `prior` and pass `--prior-dir` for a previous complete skill bundle, or use `coordinator` to expose only the delivery coordinator. Give each condition a new result directory. If a sandbox needs Claude subscription login, complete the printed command and repeat the same invocation to resume. The runner stops successful sandboxes and records their names in `trial.json`. Verify the final workspace and reviewer records before removing the trial sandbox. Codex keeps its local session inside the guest for this purpose. Some kits include a separate guest Docker engine, which the runner checks against the host engine identity.
 
 ## Add a group
 
