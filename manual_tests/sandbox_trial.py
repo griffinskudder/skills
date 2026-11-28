@@ -49,7 +49,7 @@ def main():
                 "prompt": prompt, "rubric": rubric}
         with tarfile.open(out / "inputs.tar.gz", "w:gz") as archive:
             archive.add(work, arcname="fixture")
-            if args.skill == "diagnose-django-performance":
+            if args.skill in {"diagnose-django-performance", "verify-django-migrations"}:
                 import asgiref
                 import django
                 import sqlparse

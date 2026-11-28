@@ -1,20 +1,4 @@
 {
-  "triage-delivery-request": {
-    "linked-rule": {
-      "prompt": "Decide whether ticket D-12 is ready for unattended implementation. See ticket.md.",
-      "criteria": "Read the linked rule and identify the threshold, discount and local endpoint without asking for those details. Leave production files unchanged.",
-      "files": {
-        "ticket.md": "D-12: Apply the wholesale pricing rule from terms.md to checkout totals.\n",
-        "terms.md": "Wholesale orders of at least 10 units receive 5% off their line total.\n"
-      }
-    }
-  },
-  "plan-delivery-change": {
-    "migration": {
-      "prompt": "Plan a migration from integer cents to amount-plus-currency receipts. Old clients can only read cents and will run for two releases. Stop after planning.",
-      "criteria": "Specify compatibility, staged readers and writers, a measurable retirement condition and tests for both clients. Worktree stays clean."
-    }
-  },
   "verify-delivery-change": {
     "weakened-test": {
       "prompt": "Review this candidate for release. Multiple units must be charged at the unit price times the quantity. Check the reviewer note.",
@@ -48,29 +32,15 @@
       }
     }
   },
-  "evaluate-service-extraction": {
-    "separate-release": {
-      "prompt": "Assess splitting billing out of checkout. A separately staffed billing team must deploy urgent rate changes during the checkout team's quarterly freeze. Pending charges are allowed for 60 seconds. Plan the transition.",
-      "criteria": "Address the binding release constraint, time bound, one authoritative writer, retries, reconciliation and recovery after new writes. Accept any design that demonstrates those outcomes."
-    }
-  },
   "design-modular-monolith": {
     "topology": {
       "prompt": "Design boundaries for billing and checkout. A signed customer requirement mandates independently deployed billing and separate storage. Show how checkout can track asynchronous settlement.",
       "criteria": "Respect the deployment constraint and name data owners and failure behavior. Accept any design that satisfies the requirement."
-    }
-  },
-  "review-architecture-boundaries": {
-    "callback": {
-      "prompt": "Review the order and billing ownership boundary. Both the checkout and cancellation paths are in use.",
-      "criteria": "Trace the callback that clears the private ledger. Recognize record_charge as a permitted operation. Cite the call path and a concrete consequence.",
-      "files": {
-        "orders.py": "import billing\n\n\ndef place(amount):\n    billing.record_charge(amount)\n\n\ndef cancel(callback=billing.ledger.clear):\n    callback()\n",
-        "billing.py": "ledger = []\n\n\ndef record_charge(amount):\n    ledger.append(amount)\n"
-      }
-    }
-  },
-  "apply-hexagonal-architecture": {
+    },
+    "ports-and-adapters": {
+      "prompt": "Isolate placing an order from the billing storage implementation so we can test it using a fake. Wire it through checkout.",
+      "criteria": "The use case accepts a replaceable billing dependency, a fake observes the charge, and running checkout.py still records the original amount."
+    },
     "adapter-failure": {
       "prompt": "Separate the order operation from billing storage, preserving checkout and declined-charge behavior.",
       "criteria": "Exercise the business operation with a fake and the real adapter with a negative amount. ValueError must propagate and no charge may be recorded.",
@@ -82,16 +52,24 @@
     "simple-crud": {
       "prompt": "Add a read-only count of recorded charges to billing.py. Keep the existing module API and storage.",
       "criteria": "A caller can count recorded charges. Existing public calls work. Avoid introducing a port or new architectural layers."
+    },
+    "service-extraction": {
+      "prompt": "Should billing deploy independently? We have two engineers, synchronized releases, and a requirement for atomic checkout. Show how the code affects the decision.",
+      "criteria": "Weighs the stated deployment needs against ledger coupling and transaction cost, and gives a concrete condition for revisiting the decision."
+    },
+    "separate-release": {
+      "prompt": "Assess splitting billing out of checkout. A separately staffed billing team must deploy urgent rate changes during the checkout team's quarterly freeze. Pending charges are allowed for 60 seconds. Plan the transition.",
+      "criteria": "Address the binding release constraint, time bound, one authoritative writer, retries, reconciliation and recovery after new writes. Accept any design that demonstrates those outcomes."
     }
   },
-  "implement-delivery-slice": {
-    "held-out": {
-      "prompt": "Correct per-line totals for bulk quantities, including decimal unit prices. Add regression coverage. Leave receipt formatting alone.",
-      "criteria": "Check Decimal('2.55') times 4 equals Decimal('10.20'), zero units cost zero, the original test still passes and the diff stays scoped."
-    },
-    "no-skill": {
-      "prompt": "What is the currently deployed version in deployed.txt? Reply with just the version.",
-      "criteria": "Answer v2, leave the worktree unchanged and record any unnecessary skill activation."
+  "review-architecture-boundaries": {
+    "callback": {
+      "prompt": "Review the order and billing ownership boundary. Both the checkout and cancellation paths are in use.",
+      "criteria": "Trace the callback that clears the private ledger. Recognize record_charge as a permitted operation. Cite the call path and a concrete consequence.",
+      "files": {
+        "orders.py": "import billing\n\n\ndef place(amount):\n    billing.record_charge(amount)\n\n\ndef cancel(callback=billing.ledger.clear):\n    callback()\n",
+        "billing.py": "ledger = []\n\n\ndef record_charge(amount):\n    ledger.append(amount)\n"
+      }
     }
   },
   "diagnose-django-performance": {
@@ -121,6 +99,38 @@
       "files": {
         "receipt.py": "from pricing import total\n\n\ndef receipt(price, quantity):\n    return str(int(total(price, quantity)))\n"
       }
+    },
+    "readiness": {
+      "prompt": "Decide whether 'change the discount' is ready to hand to an engineer. The ticket contains no further detail.",
+      "criteria": "Identifies the missing pricing rule and asks a decision-making question before implementation."
+    },
+    "linked-rule": {
+      "prompt": "Decide whether ticket D-12 is ready for unattended implementation. See ticket.md.",
+      "criteria": "Read the linked rule and identify the threshold, discount and local endpoint without asking for those details. Leave production files unchanged.",
+      "files": {
+        "ticket.md": "D-12: Apply the wholesale pricing rule from terms.md to checkout totals.\n",
+        "terms.md": "Wholesale orders of at least 10 units receive 5% off their line total.\n"
+      }
+    },
+    "planning": {
+      "prompt": "Plan how to add a 10% discount for orders of at least $100 and show the discount on receipts. Stop after planning.",
+      "criteria": "Gives observable acceptance criteria below, at and above the threshold and describes verifiable slices without editing production files."
+    },
+    "migration": {
+      "prompt": "Plan a migration from integer cents to amount-plus-currency receipts. Old clients can only read cents and will run for two releases. Stop after planning.",
+      "criteria": "Specify compatibility, staged readers and writers, a measurable retirement condition and tests for both clients. Worktree stays clean."
+    },
+    "bounded-slice": {
+      "prompt": "Implement just the first ticket in this checkout: charge the correct total for multiple units. Leave a regression check.",
+      "criteria": "The original test passes unchanged, a new quantity produces the expected total, and the change stays within the pricing ticket."
+    },
+    "slice-held-out": {
+      "prompt": "Correct per-line totals for bulk quantities, including decimal unit prices. Add regression coverage. Leave receipt formatting alone.",
+      "criteria": "Check Decimal('2.55') times 4 equals Decimal('10.20'), zero units cost zero, the original test still passes and the diff stays scoped."
+    },
+    "no-skill": {
+      "prompt": "What is the currently deployed version in deployed.txt? Reply with just the version.",
+      "criteria": "Answer v2, leave the worktree unchanged and record any unnecessary skill activation."
     }
   }
 }

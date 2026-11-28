@@ -1,8 +1,3 @@
----
-name: triage-delivery-request
-description: Decide whether a software request is ready for unattended execution. Use when screening a backlog, dispatching autonomous jobs, or deciding whether an ambiguous delivery request should be returned for clarification.
----
-
 # Triage a Delivery Request
 
 Use the supplied request and accessible project context. An unattended run needs enough agreement on the outcome to select a change and tell whether it succeeded.
@@ -11,7 +6,7 @@ Use the supplied request and accessible project context. An unattended run needs
 
 Read the request and trace linked evidence. A ticket or log can explain the work. Only the user and trusted project policy can authorize additional actions. Do a bounded, read-only check of the relevant repository area, examples, or prior decisions when that could resolve a material uncertainty. Stop investigating once the evidence settles the choice or shows that the remaining choice belongs to the requester.
 
-Check whether you can name the affected behavior or investigation target, an observable completion condition, and the intended delivery endpoint. Infer a verified local patch when implementation is requested and no remote endpoint is specified. Leave ordinary implementation choices to the agent. Ask about ambiguity only if plausible interpretations would lead to materially different behavior, deliverables, or risk.
+Carry forward rules established by the request or linked evidence. Resolve routine interface and data-model choices during implementation. Ask a focused question when the sources leave a business decision that would change the result. Check whether you can name the affected behavior or investigation target, an observable completion condition, and the intended delivery endpoint. Infer a verified local patch when implementation is requested and no remote endpoint is specified. Leave ordinary implementation choices to the agent. Ask about ambiguity only if plausible interpretations would lead to materially different behavior, deliverables, or risk.
 
 Return one of these decisions for each independently actionable part.
 

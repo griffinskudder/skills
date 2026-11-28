@@ -10,21 +10,17 @@ Browse or clone the [griffinskudder/skills repository on GitHub](https://github.
 
 Start with [Design a Modular Monolith](groups/software-architecture/skills/design-modular-monolith/SKILL.md) to choose a deployment model and define business module boundaries. The default is one deployable with clear module APIs and data ownership, using ports and adapters where they help isolate business behavior.
 
-- [Apply Hexagonal Architecture](groups/software-architecture/skills/apply-hexagonal-architecture/SKILL.md) introduces ports and adapters around a use case and verifies the real entry point.
+- The design skill includes focused references for [ports and adapters](groups/software-architecture/skills/design-modular-monolith/references/ports-and-adapters.md) and [service extraction](groups/software-architecture/skills/design-modular-monolith/references/service-extraction.md).
 - [Review Architecture Boundaries](groups/software-architecture/skills/review-architecture-boundaries/SKILL.md) traces code and runtime coupling, data ownership, and dependency direction.
-- [Evaluate Service Extraction](groups/software-architecture/skills/evaluate-service-extraction/SKILL.md) tests the case for independent deployment and plans an incremental migration when warranted.
 
 The [research findings](groups/software-architecture/skills/design-modular-monolith/references/research.md) explain the rationale, trade-offs, and limits of the evidence.
 
 ### Software Delivery
 
-Start with [Autonomous Software Delivery](groups/software-delivery/skills/autonomous-software-delivery/SKILL.md) to carry a change to a specified endpoint, such as a verified patch, a pull request with passing CI, or a verified rollout. Use any of the phase skills directly when you need a narrower workflow.
+Use [Autonomous Software Delivery](groups/software-delivery/skills/autonomous-software-delivery/SKILL.md) to assess readiness, plan a change, implement a bounded slice, or carry a change to a specified endpoint such as a verified patch, a pull request with passing CI, or a verified rollout.
 
 For a multi-slice plan, ask to use subagent-driven delivery. When the host supports delegation, the workflow assigns each slice to a fresh implementer, reviews individual slices when required or when risk warrants it, and independently checks the integrated change before proceeding to the requested endpoint.
 
-- [Triage a Delivery Request](groups/software-delivery/skills/triage-delivery-request/SKILL.md) decides whether a request is ready for autonomous execution and returns underspecified work with the question that would unblock it.
-- [Plan a Delivery Change](groups/software-delivery/skills/plan-delivery-change/SKILL.md) turns a request into observable acceptance criteria and independently verifiable slices.
-- [Implement a Delivery Slice](groups/software-delivery/skills/implement-delivery-slice/SKILL.md) builds one slice with fast feedback and leaves evidence the next session can use.
 - [Verify a Delivery Change](groups/software-delivery/skills/verify-delivery-change/SKILL.md) checks the actual behavior, relevant regressions, and CI for the candidate revision.
 - [Release a Delivery Change](groups/software-delivery/skills/release-delivery-change/SKILL.md) drives an authorized rollout through health checks and recovery when needed.
 
@@ -35,6 +31,7 @@ The workflow uses repository-local context, short feedback loops, and checkpoint
 ### Django
 
 - [Diagnose Django performance](groups/django/skills/diagnose-django-performance/SKILL.md) covers query growth, template rendering costs, and response size in slow Django requests.
+- [Verify Django migrations](groups/django/skills/verify-django-migrations/SKILL.md) checks upgrades with existing rows, migration ordering, and compatibility across deployment steps.
 
 ## Install from GitHub
 
@@ -116,11 +113,12 @@ Use the paired runner to measure whether a skill improves a particular task in C
 
 ```sh
 python manual_tests/compare.py compare diagnose-django-performance --arms none only --model claude-sonnet-5
+python manual_tests/compare.py compare verify-django-migrations --arms none only --model claude-sonnet-5
 python manual_tests/compare.py compare diagnose-django-performance --arms none only --host codex --model gpt-6.2-sol
-python manual_tests/compare.py compare implement-delivery-slice --scenario held-out --arms none only coordinator --model claude-sonnet-5
+python manual_tests/compare.py compare autonomous-software-delivery --scenario slice-held-out --arms none only --model claude-sonnet-5
 python manual_tests/compare.py compare autonomous-software-delivery --scenario delegated --arms only candidate --candidate-dir /path/to/alternate/autonomous-software-delivery --model claude-sonnet-5
 python manual_tests/compare.py compare autonomous-software-delivery --scenario delegated --arms only candidate --candidate-dir /path/to/alternate/autonomous-software-delivery --host codex --retain-codex-session --model gpt-6.2-sol
-python manual_tests/compare.py compare implement-delivery-slice --scenario no-skill --arms all without --repeat 3 --model claude-sonnet-5
+python manual_tests/compare.py compare autonomous-software-delivery --scenario no-skill --arms all without --repeat 3 --model claude-sonnet-5
 python manual_tests/compare.py summarize /path/to/skill-comparison-results
 ```
 
@@ -139,7 +137,7 @@ Use a local `sbx` installation with Docker sign-in, the provider's sandbox crede
 ```sh
 python manual_tests/sandbox_trial.py claude diagnose-django-performance none --model claude-sonnet-5 --results /path/to/results/claude-django-none
 python manual_tests/sandbox_trial.py claude diagnose-django-performance only --model claude-sonnet-5 --results /path/to/results/claude-django-only
-python manual_tests/sandbox_trial.py codex implement-delivery-slice only --scenario held-out --model gpt-6.2-sol --results /path/to/results/codex-slice
+python manual_tests/sandbox_trial.py codex autonomous-software-delivery only --scenario slice-held-out --model gpt-6.2-sol --results /path/to/results/codex-slice
 ```
 
 Select `prior` and pass `--prior-dir` for a previous complete skill bundle, or use `coordinator` to expose only the delivery coordinator. Give each condition a new result directory. If a sandbox needs Claude subscription login, complete the printed command and repeat the same invocation to resume. The runner stops successful sandboxes and records their names in `trial.json`. Verify the final workspace and reviewer records before removing the trial sandbox. Codex keeps its local session inside the guest for this purpose. Some kits include a separate guest Docker engine, which the runner checks against the host engine identity.

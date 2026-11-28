@@ -1,8 +1,3 @@
----
-name: evaluate-service-extraction
-description: Decide whether to extract a monolith module into a separately deployed service, or plan an incremental extraction after the decision. Use for monolith decomposition, independent deployment, scaling, and isolation trade-offs.
----
-
 # Evaluate service extraction
 
 Start with the outcome a separate deployable is meant to achieve. Look for a binding constraint such as sustained scaling differences, release coordination, fault isolation, or required data isolation. Establish a baseline or cite the hard requirement. Compare the smallest in-process or operational change that could meet it with the cost and benefits of a service. If the evidence is weak, name what to measure and what result would change the decision.

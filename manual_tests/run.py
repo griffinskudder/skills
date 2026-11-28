@@ -71,6 +71,9 @@ def prepare(skill, mode, scenario="default", installed=None, destination=".agent
             replacement=None):
     group = next(p.parents[2].name for p in SKILLS if p.parent.name == skill)
     fixture = HERE / "fixtures" / group.removeprefix("software-")
+    skill_fixture = HERE / "fixtures" / skill
+    if skill_fixture.is_dir():
+        fixture = skill_fixture
     work = Path(tempfile.mkdtemp(prefix="skill-trial-")).resolve()
     shutil.copytree(fixture, work, dirs_exist_ok=True, ignore=shutil.ignore_patterns("__pycache__"))
 

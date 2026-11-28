@@ -15,7 +15,7 @@ from run import run
 
 class ComparisonTests(unittest.TestCase):
     def test_codex_checks_inventory_before_starting_the_agent(self):
-        target = "implement-delivery-slice"
+        target = "autonomous-software-delivery"
         with tempfile.TemporaryDirectory() as temp:
             case = Path(temp)
             def emit(command, **streams):
@@ -41,7 +41,7 @@ class ComparisonTests(unittest.TestCase):
                 streams["stdout"].write((json.dumps(event) + "\n").encode())
             return SimpleNamespace(returncode=0)
 
-        target = "implement-delivery-slice"
+        target = "autonomous-software-delivery"
         init = {"type": "system", "subtype": "init", "model": "test", "skills": [target]}
         final = {"type": "result", "subtype": "success", "result": "done", "is_error": False}
         with tempfile.TemporaryDirectory() as temp, patch("compare.subprocess.run", emit):
@@ -61,7 +61,7 @@ class ComparisonTests(unittest.TestCase):
             def make_temp(**kwargs):
                 return original(dir=temp, **kwargs)
 
-            args = SimpleNamespace(skill="implement-delivery-slice", scenario="held-out",
+            args = SimpleNamespace(skill="autonomous-software-delivery", scenario="slice-held-out",
                                    arms=["none", "only", "without"], candidate_dir=None,
                                    repeat=2, timeout=1, executable="unused",
                                    prepare_only=True, model="test", host="claude", retain_codex_session=False)

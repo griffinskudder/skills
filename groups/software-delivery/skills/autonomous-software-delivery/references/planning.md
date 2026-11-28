@@ -1,8 +1,3 @@
----
-name: plan-delivery-change
-description: Plan a requested software change by defining acceptance criteria, sequencing dependencies, and identifying the first verifiable slice. Use when the requested deliverable is a plan or migration sequence.
----
-
 # Plan a Delivery Change
 
 Requires access to the target project's source or delivery documentation for a repository-grounded plan.

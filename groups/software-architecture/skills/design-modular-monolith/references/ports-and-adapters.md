@@ -1,8 +1,3 @@
----
-name: apply-hexagonal-architecture
-description: Design or refactor an application use case with ports and adapters. Use when business behavior needs to be exercised independently of HTTP, storage, messaging, or third-party APIs.
----
-
 # Apply hexagonal architecture
 
 Trace one use case through its real entry point, business decisions, and side effects. Find where transport, persistence, or vendor code makes the behavior difficult to exercise or change. Start with the smallest boundary that addresses that friction. Simple CRUD can use the framework directly when it offers a clear implementation and practical tests.

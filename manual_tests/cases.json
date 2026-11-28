@@ -3,18 +3,6 @@
     "Is this checkout ready to ship? Check the candidate and its reported build result.",
     "Identifies the revision mismatch in build.txt, runs the local test, reports the failing total, and leaves the candidate untouched."
   ],
-  "triage-delivery-request": [
-    "Decide whether 'change the discount' is ready to hand to an engineer. The ticket contains no further detail.",
-    "Identifies the missing pricing rule and asks a decision-making question before implementation."
-  ],
-  "plan-delivery-change": [
-    "Plan how to add a 10% discount for orders of at least $100 and show the discount on receipts. Stop after planning.",
-    "Gives observable acceptance criteria below, at and above the threshold and describes verifiable slices without editing production files."
-  ],
-  "implement-delivery-slice": [
-    "Implement just the first ticket in this checkout: charge the correct total for multiple units. Leave a regression check.",
-    "The original test passes unchanged, a new quantity produces the expected total, and the change stays within the pricing ticket."
-  ],
   "autonomous-software-delivery": [
     "Take the incorrect multiple-unit total from investigation through a verified local patch. Leave enough evidence for a fresh session to pick it up.",
     "Fixes the actual price calculation, runs the regression test, reports the verified local endpoint and records evidence. For a resume trial interrupt after the edit, start a fresh session and ask it to finish from the checkpoint."
@@ -35,17 +23,13 @@
     "Trace how orders and billing depend on each other. Identify a concrete ownership violation and its impact.",
     "Traces checkout.py through orders.py to billing.py and identifies direct mutation of the billing ledger, with file evidence."
   ],
-  "apply-hexagonal-architecture": [
-    "Isolate placing an order from the billing storage implementation so we can test it using a fake. Wire it through checkout.",
-    "The use case accepts a replaceable billing dependency, a fake observes the charge, and running checkout.py still records the original amount."
-  ],
   "design-modular-monolith": [
     "Design module APIs and data ownership for orders and billing. Our two engineers release both together and need atomic checkout.",
     "Specifies who owns the ledger, the API orders calls, the commit point, rollback after a failure between writes, and a check that detects new cross-module access. Fail a design that claims atomicity while a pending order or charge can survive a failed checkout."
   ],
-  "evaluate-service-extraction": [
-    "Should billing deploy independently? We have two engineers, synchronized releases, and a requirement for atomic checkout. Show how the code affects the decision.",
-    "Weighs the stated deployment needs against ledger coupling and transaction cost, and gives a concrete condition for revisiting the decision."
+  "verify-django-migrations": [
+    "The order reference change passed CI on a new database. Check whether an upgrade will work for existing orders and fix any issues you find. The release is unpublished.",
+    "Reproduces the populated upgrade failure from orders.0001_initial, repairs the migration sequence, and verifies a populated upgrade and a clean install. Independently seed at least two distinct order numbers, including one with leading zeros. Check the original rows and order numbers survive, each reference is exactly ORD- followed by the original order number, and the database rejects null and duplicate references. Review the trace or a regression check for evidence of the populated upgrade."
   ],
   "diagnose-django-performance": [
     "Diagnose why the two order formset scenarios in scenarios.py slow down as row count increases. Measure each before recommending changes.",

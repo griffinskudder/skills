@@ -1,8 +1,3 @@
----
-name: implement-delivery-slice
-description: Build and test one ticket or one slice of a delivery plan. Use when asked to fix a specific behavior, implement a bounded change, or leave a regression check for that ticket.
----
-
 # Implement a Delivery Slice
 
 Requires access to the target workspace. Running checks requires the project's development dependencies.

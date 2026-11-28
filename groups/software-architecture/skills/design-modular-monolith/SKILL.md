@@ -1,9 +1,13 @@
 ---
 name: design-modular-monolith
-description: Design business module boundaries for an application considering or using a modular monolith. Use when defining module APIs, data ownership, and transaction boundaries within a deployable application.
+description: Design business module boundaries, isolate a use case with ports and adapters, or evaluate extracting a module into an independently deployed service. Use for module APIs, data ownership, transaction boundaries, and deployment topology.
 ---
 
 # Design a modular monolith
+
+- For a specific use case that needs isolation from storage, transport, or a vendor, follow [ports and adapters](references/ports-and-adapters.md).
+- For a decision about independent deployment or a service cutover plan, follow [service extraction](references/service-extraction.md).
+- For a module design within an application or a new system selecting its topology, use the workflow below.
 
 Start with one deployable application for a new system while business boundaries are still evolving. A small application can start with only the modules its current workflows justify. Use ports and adapters where business rules need isolation from external technology. Treat deployment topology and dependency direction as separate decisions. Read the [research findings](references/research.md) when explaining the default or comparing it with a distributed design.
 
