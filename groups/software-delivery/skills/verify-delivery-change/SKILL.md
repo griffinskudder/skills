@@ -1,6 +1,6 @@
 ---
 name: verify-delivery-change
-description: Verify a candidate patch or pull request against acceptance criteria, behavior checks, and required CI. Use when validating a change before merge or auditing another agent's delivery evidence.
+description: Check whether a checkout, patch, or pull request is ready to ship or merge. Use when asked to verify the candidate, reproduce test results, or check that a reported build covers the revision under review.
 ---
 
 # Verify a Delivery Change

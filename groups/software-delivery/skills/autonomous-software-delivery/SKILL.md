@@ -1,6 +1,6 @@
 ---
 name: autonomous-software-delivery
-description: Drive a software change autonomously from a request or plan through the requested delivery endpoint. Use for end-to-end implementation, subagent-driven delivery, pull request and CI follow-through, or resuming a delivery run.
+description: Own a software change from investigation or an existing plan through a requested endpoint such as a verified local patch, passing pull request, or healthy rollout. Use for end-to-end delivery, handoff and resume, or subagent-driven delivery.
 ---
 
 # Autonomous Software Delivery

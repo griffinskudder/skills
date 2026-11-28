@@ -1,6 +1,6 @@
 ---
 name: release-delivery-change
-description: Prepare or execute a software release for a specified revision and environment, then verify rollout health. Use when asked to deploy, publish, monitor, or recover a software rollout.
+description: Run or monitor a deployment in its target environment, check rollout health, and recover a failed release. Use for staged rollouts, rollback decisions, and verification of the recovered version, including release rehearsals.
 ---
 
 # Release a Delivery Change

@@ -1,6 +1,6 @@
 ---
 name: implement-delivery-slice
-description: Implement one scoped software change from a ticket or delivery plan using fast feedback. Use when the requested work is a bounded feature, behavior change, or bug fix.
+description: Build and test one ticket or one slice of a delivery plan. Use when asked to fix a specific behavior, implement a bounded change, or leave a regression check for that ticket.
 ---
 
 # Implement a Delivery Slice

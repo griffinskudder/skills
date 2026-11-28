@@ -91,6 +91,25 @@ claude plugin install django@griffinskudder-skills
 
 Plugins use the repository commit as their version. Claude's validator may suggest adding an explicit version.
 
+## Run the manual skill tests
+
+From the checkout, use Python 3.9+ to check all skill packages or prepare an agent trial. Trials also require Git. The Django outcome case needs a Python environment with Django installed.
+
+```sh
+python manual_tests/run.py check
+python manual_tests/run.py list
+python manual_tests/run.py prepare verify-delivery-change outcome
+python manual_tests/run.py prepare verify-delivery-change routing
+python manual_tests/run.py codex verify-delivery-change both
+python manual_tests/run.py codex all both
+```
+
+The `codex` command requires a signed-in Codex CLI supporting `exec --ephemeral --json`. Use `--executable "<path to codex>"` if it is outside PATH. Each trial sends its prompt and the fixture content Codex reads to your configured model provider. The full run starts 26 independent sessions. The printed results directory contains each trial’s prompt, checkout path, grading criteria, JSONL trace, error log and final answer. A successful CLI exit means the session completed. Grade routing from evidence that Codex opened the checkout’s copy of the skill or explicitly activated it, and grade outcomes from the answer and checkout. If activation is hidden, record routing as unverified.
+
+`check` verifies case coverage, skill metadata, local links, group listings and byte-for-byte installs. For a trial, open the printed temporary repository in a fresh agent session that discovers project skills from `.agents/skills`. Paste only the printed prompt. Each run creates an independent checkout with all skills installed and leaves it available for inspection.
+
+Use `routing` to see which skill the agent opens for a natural request. Record the actual activation from the session trace. Mark it unverified if the host doesn’t expose activation. Prompts for neighboring skills serve as negative examples: for instance, the plan-only request should end with a plan. Use `outcome` to name the skill explicitly and compare the final checkout, commands and answer with the printed evaluator criteria. Record the skill, mode, model, pass/fail and supporting evidence. Repeat both modes for each name from `list` for a full manual run. Delete a trial directory after reviewing it.
+
 ## Add a group
 
 For a new topic such as Software Delivery, put its first skill under `groups/software-delivery/skills/<skill-name>/`. The Python installer discovers the group automatically. To offer it through Claude Code, use the Django group's plugin manifest as a template and add a matching entry to `.claude-plugin/marketplace.json`. Keep skill names unique across groups because they share an installation directory.
